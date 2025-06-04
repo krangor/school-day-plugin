@@ -53,7 +53,7 @@ jobs:
             emoji = "🏫"
             is_school_day = True
         
-        # Create the output data
+        # Create the output data - try different formats for TRMNL
         output_data = {
             'school_day': school_day,
             'status': status,
@@ -62,12 +62,20 @@ jobs:
             'date': today,
             'formatted_date': datetime.now().strftime('%B %d, %Y'),
             'day_name': datetime.now().strftime('%A'),
-            'last_updated': datetime.now().isoformat()
+            'last_updated': datetime.now().isoformat(),
+            # Also try flat structure
+            'day': school_day,
+            'message': status,
+            'icon': emoji
         }
         
-        # Write to today.json
+        # Write to today.json - try TRMNL-friendly format
         with open('today.json', 'w') as f:
             json.dump(output_data, f, indent=2)
+        
+        # Also create a simple text version for testing
+        with open('today.txt', 'w') as f:
+            f.write(f"{emoji} {status}\n{datetime.now().strftime('%B %d, %Y')}")
         
         print(f"Updated school day data: {status}")
         EOF
@@ -79,7 +87,7 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add today.json
+        git add today.json today.txt
         if git diff --staged --quiet; then
           echo "No changes to commit"
         else
