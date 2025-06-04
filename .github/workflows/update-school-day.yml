@@ -1,1 +1,43 @@
+# .github/workflows/update-school-day.yml
+name: Update School Day
 
+on:
+  schedule:
+    # Run every day at 6 AM UTC (adjust timezone as needed)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  update-school-day:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+    
+    - name: Update school day data
+      run: |
+        python << 'EOF'
+        import json
+        import requests
+        from datetime import datetime
+        
+        # Read the calendar data
+        with open('calendar.json', 'r') as f:
+            calendar_data = json.load(f)
+        
+        # Get today's date
+        today = datetime.now().strftime('%Y-%m-%d')
+        school_day = calendar_data.get(today, 'Unknown')
+        
+        # Format the data for TR
