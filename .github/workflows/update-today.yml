@@ -1,0 +1,29 @@
+name: Update Today.json
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # every day at 5:00 AM UTC
+  workflow_dispatch:      # allow manual run
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run update script
+        run: python scripts/update_today.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add today.json
+          git diff --cached --quiet || git commit -m "Update today.json"
+          git push
