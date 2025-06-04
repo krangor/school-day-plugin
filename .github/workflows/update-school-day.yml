@@ -25,11 +25,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install requests
     
-    - name: Update school day data
+    - name: Create Python script
       run: |
-        python << 'EOF'
+        cat > update_school_day.py << 'EOF'
         import json
-        import requests
         from datetime import datetime
         
         # Read the calendar data
@@ -40,4 +39,46 @@ jobs:
         today = datetime.now().strftime('%Y-%m-%d')
         school_day = calendar_data.get(today, 'Unknown')
         
-        # Format the data for TR
+        # Format the data for TRMNL
+        if school_day == 'X':
+            status = "No School"
+            emoji = "🏠"
+            is_school_day = False
+        elif school_day == 'Unknown':
+            status = "Day Not Found"
+            emoji = "❓"
+            is_school_day = False
+        else:
+            status = f"Day {school_day}"
+            emoji = "🏫"
+            is_school_day = True
+        
+        # Create the output data
+        output_data = {
+            'school_day': school_day,
+            'status': status,
+            'emoji': emoji,
+            'is_school_day': is_school_day,
+            'date': today,
+            'formatted_date': datetime.now().strftime('%B %d, %Y'),
+            'day_name': datetime.now().strftime('%A'),
+            'last_updated': datetime.now().isoformat()
+        }
+        
+        # Write to today.json
+        with open('today.json', 'w') as f:
+            json.dump(output_data, f, indent=2)
+        
+        print(f"Updated school day data: {status}")
+        EOF
+    
+    - name: Run Python script
+      run: python update_school_day.py
+    
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add today.json
+        git diff --staged --quiet || git commit -m "Update school day for $(date +%Y-%m-%d)"
+        git push
