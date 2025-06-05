@@ -2,7 +2,7 @@ name: Update Today and Tomorrow JSON
 
 on:
   schedule:
-    - cron: '1 5 * * *'
+    - cron: '5 4 * * *'
   workflow_dispatch:
 
 jobs:
