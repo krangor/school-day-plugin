@@ -1,11 +1,19 @@
 import json
-from datetime import date
+from datetime import datetime
+import pytz
 
-with open("calendar.json", encoding="utf-8") as f:
+# Use Eastern Time (ET) — will auto-adjust for DST
+eastern = pytz.timezone("America/Toronto")
+now = datetime.now(eastern)
+today = now.date().isoformat()
+
+# Load the calendar
+with open("calendar.json") as f:
     calendar = json.load(f)
 
-today = date.today().isoformat()
+# Look up the value
 value = calendar.get(today, "❓")
 
-with open("today.json", "w", encoding="utf-8") as f:
-    json.dump({"value": value}, f, indent=2, ensure_ascii=False)
+# Save to today.json
+with open("today.json", "w") as f:
+    json.dump({"value": value}, f)
