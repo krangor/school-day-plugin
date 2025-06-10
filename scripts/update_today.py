@@ -17,3 +17,7 @@ value = calendar.get(today, "❓")
 # Save to today.json
 with open("today.json", "w") as f:
     json.dump({"value": value}, f)
+
+print(f"Current Eastern time: {now}")
+print(f"Using date: {today}")
+print(f"Value written: {value}")
