@@ -2,7 +2,7 @@ name: Update Today and Tomorrow JSON
 
 on:
   schedule:
-    - cron: '5 4 * * *'  # 12:05 AM ET
+    - cron: '5 4 * * *'  # runs at 12:05 AM ET (during daylight saving)
   workflow_dispatch:
 
 jobs:
@@ -26,12 +26,17 @@ jobs:
       - name: Update tomorrow.json
         run: python scripts/update_tomorrow.py
 
+      # ✅ Debug what changed
+      - name: Debug Git status and diffs
+        run: |
+          git status
+          git diff today.json
+          git diff tomorrow.json
+
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git reset --hard HEAD
-          git pull --rebase
           git add today.json tomorrow.json
           git diff --cached --quiet || git commit -m "Update today and tomorrow JSON"
           git push
