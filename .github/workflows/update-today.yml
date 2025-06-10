@@ -32,10 +32,12 @@ jobs:
           git config user.email "github-actions@github.com"
           git pull --rebase
 
-      - name: Commit and push if changed
+         - name: Commit and push if changed
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
+          git reset --hard HEAD
+          git pull --rebase
           git add today.json tomorrow.json
           git diff --cached --quiet || git commit -m "Update today and tomorrow JSON"
           git push
