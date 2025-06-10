@@ -26,13 +26,7 @@ jobs:
       - name: Update tomorrow.json
         run: python scripts/update_tomorrow.py
 
-      - name: Pull latest changes
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git pull --rebase
-
-         - name: Commit and push if changed
+      - name: Commit and push if changed
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
