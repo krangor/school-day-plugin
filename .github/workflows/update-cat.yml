@@ -1,9 +1,9 @@
 name: Update Cat JSONs
 
-on:
-  schedule:
-    - cron: '5 * * * *'  # Every hour at 5 minutes past the hour
-  workflow_dispatch:
+## on:
+##  schedule:
+##    - cron: '5 * * * *'  # Every hour at 5 minutes past the hour
+##  workflow_dispatch:
 
 jobs:
   update:
