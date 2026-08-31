@@ -2,7 +2,8 @@ name: Update Today and Tomorrow JSON
 
 on:
   schedule:
-    - cron: '5 4 * * *'  # runs at 12:05 AM ET (during standard time)
+    - cron: '45 0 * * *'
+      timezone: 'America/Toronto'
   workflow_dispatch:
 
 jobs:
